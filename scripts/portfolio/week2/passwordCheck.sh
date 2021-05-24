@@ -7,9 +7,12 @@ result=$(grep "$hash" secret.txt)
 
 if [ "$result" = "$hash" ] 
 then
-	echo "Match Found!"
+	echo "Access Granted"
+	exit 0
 else
-	echo "No Match Found!"
+	echo "Access Denied"
+	exit 1
 fi
+
 
 
