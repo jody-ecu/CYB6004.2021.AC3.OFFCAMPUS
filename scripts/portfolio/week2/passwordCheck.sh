@@ -1,6 +1,6 @@
 #!/bin/bash
 read -sp "Enter Password: " pwd
-hash=$(echo $pwd | sha256sum | tr -d "\n *-")
+hash=$(echo $pwd | sha256sum)
 
 result=$(grep "$hash" secret.txt)
 
