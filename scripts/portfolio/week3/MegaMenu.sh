@@ -1,6 +1,6 @@
 #!/bin/bash
 echo -e -n "\033[31m"
-./passwordCheck.sh
+../week2/passwordCheck.sh
 if [ $? -eq 1 ]
 then
 	echo "Goodbye"
@@ -30,19 +30,20 @@ do
 
 	case $reply in
 
-	1)  ../week2/foldermaker.sh
+	1)  ./foldermaker.sh
 		return=$?
 		;;
-	2)  ../week2/foldercopier.sh
+	2)  ./foldercopier.sh
 		return=$?
 		;;
-	3)  ../week2/setPassword.sh
+	3)  ./setPassword.sh
 		return=$?
 		;;
-	4)  ../week2/calculator.sh
+	4)  ./calculator.sh
 		return=$?
 		;;
-	5)  ./createFolders.sh
+	5)   read -p "enter week numbers" from to
+		./megafoldermaker.sh $from $to
 		return=$?
 		;;
 	6)  ./filenames.sh ./filenames.txt
