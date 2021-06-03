@@ -1,4 +1,5 @@
 #!/bin/bash
+
 while [ "$reply" != "exit" ]
 do
   read -p "Please type the URL of a file to download or 'exit' to quit: " reply
@@ -7,3 +8,5 @@ do
     wget -P "$location" "$reply"
   fi
 done
+
+exit 0

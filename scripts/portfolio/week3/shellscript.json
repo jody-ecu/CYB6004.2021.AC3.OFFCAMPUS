@@ -1,0 +1,96 @@
+{
+	// Place your snippets for shellscript here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+
+	"add a shebang": {
+		"scope": "sh",
+		"prefix": "shebang",
+		"body": [
+			"#!/bin/bash"
+		],
+		"description": "Add a shebang script"
+	},
+
+	"BLACK": {
+		"scope": "sh",
+		"prefix": "BLACK",
+		"body": [
+			"\\033[30m"
+		],
+		"description": "Add color black to output"
+	},
+
+	"RED": {
+		"scope": "sh",
+		"prefix": "RED",
+		"body": [
+			"\\033[31m"
+		],
+		"description": "Add color red to output"
+	},
+
+	"GREEN": {
+		"scope": "sh",
+		"prefix": "GREEN",
+		"body": [
+			"\\033[32m"
+		],
+		"description": "Add color green to output"
+	},
+
+	"BROWN": {
+		"scope": "sh",
+		"prefix": "BROWN",
+		"body": [
+			"\\033[33m"
+		],
+		"description": "Add color brown to output"
+	},
+
+	"BLUE": {
+		"scope": "sh",
+		"prefix": "BLUE",
+		"body": [
+			"\\033[34m"
+		],
+		"description": "Add color blue to output"
+	},
+
+	"PURPLE": {
+		"scope": "sh",
+		"prefix": "PURPLE",
+		"body": [
+			"\\033[35m"
+		],
+		"description": "Add color purple to output"
+	},
+
+	"CYAN": {
+		"scope": "sh",
+		"prefix": "CYAN",
+		"body": [
+			"\\033[36m"
+		],
+		"description": "Add color cyan to output"
+	},
+
+	"GREY": {
+		"scope": "sh",
+		"prefix": "GREY",
+		"body": [
+			"\\033[37m"
+		],
+		"description": "Add color grey to output"
+	}
+}
