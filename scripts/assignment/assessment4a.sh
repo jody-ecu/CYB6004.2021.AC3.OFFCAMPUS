@@ -17,37 +17,43 @@ p
 #now adding the statistics description.
 arraylength=${#array[@]}
 echo "$arraylength"
-array+=( $(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" \
-https://www.statista.com/topics/1731/smb-and-cyber-crime/ | sed -n '/Dataset/,/name/p' | \
-sed -n -r -e '/"name":/ { 
- s/"name": "//g 
- s/ /?/g
- s/",//g
-p
-}' ) )
+#array+=( $(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" \
+#https://www.statista.com/topics/1731/smb-and-cyber-crime/ | sed -n '/Dataset/,/name/p' | \
+#sed -n -r -e '/"name":/ { 
+# s/"name": "//g 
+# s/ /?/g
+# s/",//g
+#p
+#}' ) )
 
-arraylength2=${#array[@]}
-echo "$arraylength2"
+#array+=( $(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" https://www.statista.com/topics/1731/smb-and-cyber-crime/ \
+#| sed -n '/Dataset/,/description/p' |  sed -n '/description": "/ p' | sed -n 's/                                "description": "// ; s/"// p' ) )
+
+#arraylength2=${#array[@]}
+#echo "$arraylength2"
+curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" https://www.statista.com/topics/1731/smb-and-cyber-crime/ | \
+sed -n 's/                                "description": "/"/p' | awk '{print NR" "$0}'
 
 # use for loop to read all values and indexes
-for (( i=${arraylength}; i<${arraylength2}; i++ ));
-do
-  o=$(echo -e "$(($i+1-$arraylength))\t${array[$i]}" | tr "?" " ")
-#  x=$(echo "$o" | tr " " ".")
-  echo "$o"
-done
+#for (( i=${arraylength}; i<${arraylength2}; i++ ));
+#do
+#  o=$(echo -e "$(($i+1-$arraylength))\t${array[$i]}" | tr "?" " ")
+##  x=$(echo "$o" | tr " " ".")
+#  echo "$o"
+#done
 
-
+echo
 read -p "Enter a selection (1-$arraylength) to view the statistics: " selection
-statisticDesc=$(echo "${array[$selection + $arraylength-1]}" | tr "?" " ")
-echo "Preparing statistics for selection ($selection) $statisticDesc"
-var="${array[($selection - 1)]}"
 
+echo  "Preparing statistics for selection ($selection)"
+echo
+var="${array[($selection - 1)]}"
+echo "Reading statistics from - $var"
 #using the statistics url scrape all the statistics
 result=$(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" \
 $var | grep "<table id=\"statTableHTML")
 
-
+echo
 #show the statistics in a nice to read format on the screen
 echo $result | sed -n '/<tr><td>/ {
  s/<tr><td>//g
