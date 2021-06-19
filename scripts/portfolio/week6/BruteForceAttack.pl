@@ -2,13 +2,12 @@
 use Digest::SHA qw(sha256_hex);
 
 $passwordHash = "8b7df143d91c716ecfa5fc1730022f6b421b05cedee8fd52b1fc65a96030ad52";
-# "77af778b51abd4a3c51c5ddd97204a9c3ae614ebccb75a606c3b6865aed6744e";
-
+#prepare for the range of characters in the word to be created.
 @chars = ("a".."z"); 
 
 while (1) {
     #hash the word
-    $word .= $chars[rand @chars] for 1..4;
+    $word .= $chars[rand @chars] for 1..4; #then length of the password to be cracked has to be 4 characters in length. 
     $wordlistHash = sha256_hex($word);
 
     print "$word: $wordlistHash\n";
