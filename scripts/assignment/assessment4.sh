@@ -1,13 +1,44 @@
 #!/bin/bash
+
+# This program displays the vaious cyberseurity statistics from the website
+# https://www.statista.com/topics/1731/smb-and-cyber-crime/ 
+#
+# Copyright 2021 Jody Petroni
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 clear
-#splash screen
+
+# Show a splash screen
 figlet "Assessment 4"
 figlet "Screen Scraping"
 figlet "Jody Petroni"
 figlet "840131"
 
-#Scrape content from website to look for all the url's containing statistical data.
-#Store these in an array so they can be searched and used later
+# Reuse Password Check from Week 2
+echo -e -n "\033[31m"
+./passwordCheck.sh
+
+if [ $? -eq 1 ]
+then
+	figlet "Goodbye"
+	exit 1
+fi
+
+# Scrape content from website to look for all the url's containing statistical data.
+# Use sed to Store these url's in an array so they can be searched and used later
+echo -e "\033[34mGathering statistics from U.S. companies and cyber crime - statistics & facts - (this will take a couple of seconds!)\033[32m"
 array=( $(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" \
 https://www.statista.com/topics/1731/smb-and-cyber-crime/ | sed -n '/Dataset/,/name/p' | \
 sed -n -r -e '/url/ {
@@ -16,39 +47,42 @@ sed -n -r -e '/url/ {
 p
 }'
 ))
-#get the length of the array.
+# Store the length of the array in a variable.
 arraylength=${#array[@]}
 
-#Now show each of the statistics description.
+# Now show each of the statistics description that is accessible from the array of URL's already stored.
+# Use sed to search for descriptions and awk to display line numbers
 curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" https://www.statista.com/topics/1731/smb-and-cyber-crime/ | \
-sed -n 's/                                "description": "/"/p' | awk 'BEGIN {
-									print "\033[34mGathering statistics from U.S. companies and cyber crime - statistics & facts\033[32m"
-								       }
-								       {
+sed -n 's/                                "description": "/"/p' | awk '{
 									print NR "\033[32m. " $0
 								       }'
 echo 
 echo "Type q to exit"
 
+# Enter a loop so the user can view multiple statistics without re-running the program.
 while [ "$selection" != "q" ]
 do
 	echo -e "\e[31m"
-	#ask user to enter a selection.
+	# Ask user to enter a selection between 1 and the length of the array containing the url to the individual statistic.
 	read -p "Enter a selection (1-$arraylength) to view the statistics: " selection
 	if [ "$selection" = "q" ]; then
-		#If the user types "q" then quit the program
+		# If the user types "q" then quit the program
   		figlet "Goodbye !!"
+		# Exit gracefully
   		exit 0;
 	fi
 	echo -e "\033[0m"
-	#lookup the URL from the array bassed on the users selection
+	# Lookup the URL from the array bassed on the users selection
 	url="${array[($selection - 1)]}"
 	echo "Reading statistics from - $url"
 	echo
-	#using the statistics url scrape all the statistics and show in a formatted table.
+	# Using the statistics url scrape all the statistics and show in a formatted table.
+	# Use grep to search for the begining of the statistics content.
 	result=$(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" \
 	$url | grep "<table id=\"statTableHTML")
 
+	# Use sed to search for and replace common html Table elements to get the raw statistical data
+	# Use awk to format and print the results in a formatted table.
 	echo $result | sed -n '/<tr><td >/ {
 	 s/<thead><tr><th>//g	
 	 s/<\/th><th>/~/g
