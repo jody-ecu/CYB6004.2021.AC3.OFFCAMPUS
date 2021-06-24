@@ -54,10 +54,9 @@ arraylength=${#array[@]}
 # Use sed to search for descriptions and awk to display line numbers
 curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" https://www.statista.com/topics/1731/smb-and-cyber-crime/ | \
 sed -n 's/                                "description": "/"/p' | awk '{
-									print NR "\033[32m. " $0
+									print NR "\033[32m.\t" $0
 								       }'
-echo 
-echo "Type q to exit"
+echo -e "\nType q to exit"
 
 # Enter a loop so the user can view multiple statistics without re-running the program.
 while [ "$selection" != "q" ]
@@ -82,8 +81,7 @@ do
 		echo -e "\033[0m"
 		# Lookup the URL from the array bassed on the users selection
 		url="${array[($selection - 1)]}"
-		echo "Reading statistics from - $url"
-		echo
+		echo -e "Reading statistics from - $url"
 		# Using the statistics url scrape all the statistics and show in a formatted table.
 		# Use grep to search for the begining of the statistics content.
 		result=$(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" \
@@ -122,6 +120,9 @@ do
 					printf "\n"  
 				cnt = cnt + 1
 		 	 }
+			}
+			END {
+			 printf "NOTE: Some statistics will not display if you are required to pay for them!\n"
 			}'
 	   fi
 	fi
