@@ -71,48 +71,58 @@ do
 		# Exit gracefully
   		exit 0;
 	fi
-	echo -e "\033[0m"
-	# Lookup the URL from the array bassed on the users selection
-	url="${array[($selection - 1)]}"
-	echo "Reading statistics from - $url"
-	echo
-	# Using the statistics url scrape all the statistics and show in a formatted table.
-	# Use grep to search for the begining of the statistics content.
-	result=$(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" \
-	$url | grep "<table id=\"statTableHTML")
+	# Check to see if the  selction is a Number
+	if ! [[ "$selection" =~ ^-?[0-9]+$ ]]; then
+	  echo "selection must be a number!"
+	else
+	  # Check to see if the number is between 1 and the length of the array
+	  if [[ "$selection" -lt 1 ]] || [[ "$selection" -gt "$arraylength" ]]; then
+	  	echo -e "Number must be between 1 and $arraylength!\n"
+          else
+		echo -e "\033[0m"
+		# Lookup the URL from the array bassed on the users selection
+		url="${array[($selection - 1)]}"
+		echo "Reading statistics from - $url"
+		echo
+		# Using the statistics url scrape all the statistics and show in a formatted table.
+		# Use grep to search for the begining of the statistics content.
+		result=$(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" \
+		$url | grep "<table id=\"statTableHTML")
 
-	# Use sed to search for and replace common html Table elements to get the raw statistical data
-	# Use awk to format and print the results in a formatted table.
-	echo $result | sed -n '/<tr><td >/ {
-	 s/<thead><tr><th>//g	
-	 s/<\/th><th>/~/g
-	 s/<\/th><\/tr><\/thead>/\n/g
-	 s/<tbody><tr><td >//g
-	 s/<\/td><td >/~/g
-	 s/<\/td><\/tr><tr><td >/\n/g
-	 s/<\/td><\/tr><\/tbody><\/table>//g 
-	 s/<\/div>//g
-	 s/class="statisticChart statisticChart--typeTable hide ">//g
-	 s/<div class="dataTables_wrapper">//g
-	 s/<div id="statTable"><\/div>"//g
-	 s/<table id="statTableHTML" class="table hidden">//g
-	 s/<\/div><div data-statistic-chart//g
- 	 s/<div id="statTable">//g
- 	 s/<div data-statistic-chart//g
-	 s/class="statisticChart statisticChart--typeTable display-block ">//g
- 	 s/<span>%<\/span>//g
-	 p
-	}' | awk 'BEGIN {
-		   FS="~"
-		} 
-		{
-		 cnt=1
-		 for (i = 1; i <= NF; i++) 
-		 {
-			printf "%-60s",$i
-			if (NF == cnt) 
-				printf "\n"  
-			cnt = cnt + 1
-		 }
-		}'
+		# Use sed to search for and replace common html Table elements to get the raw statistical data
+		# Use awk to format and print the results in a formatted table.
+		echo $result | sed -n '/<tr><td >/ {
+		 s/<thead><tr><th>//g	
+		 s/<\/th><th>/~/g
+		 s/<\/th><\/tr><\/thead>/\n/g
+		 s/<tbody><tr><td >//g
+		 s/<\/td><td >/~/g
+		 s/<\/td><\/tr><tr><td >/\n/g
+		 s/<\/td><\/tr><\/tbody><\/table>//g 
+		 s/<\/div>//g
+		 s/class="statisticChart statisticChart--typeTable hide ">//g
+		 s/<div class="dataTables_wrapper">//g
+		 s/<div id="statTable"><\/div>"//g
+		 s/<table id="statTableHTML" class="table hidden">//g
+		 s/<\/div><div data-statistic-chart//g
+	 	 s/<div id="statTable">//g
+	 	 s/<div data-statistic-chart//g
+		 s/class="statisticChart statisticChart--typeTable display-block ">//g
+ 		 s/<span>%<\/span>//g
+		 p
+		}' | awk 'BEGIN {
+			   FS="~"
+			} 
+			{
+			 cnt=1
+			 for (i = 1; i <= NF; i++) 
+			 {
+				printf "%-50s",$i
+				if (NF == cnt) 
+					printf "\n"  
+				cnt = cnt + 1
+		 	 }
+			}'
+	   fi
+	fi
 done
