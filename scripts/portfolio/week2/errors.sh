@@ -3,7 +3,10 @@
 secret='shhh' #Don't tell anyone!
 
 #if the user types in the correct secret, tell them they got it right!
-read
+
+read -s -p "what's the secret code?"
+
+echo
 
 if [ "$secret" = $REPLY ]; then
 
@@ -16,8 +19,6 @@ else     echo "You got it wrong :("
     correct=false
 
 fi
-
-read -s -p "what's the secret code?"
 
 echo
 
